@@ -1,0 +1,51 @@
+<div class="row">
+    <?php $this->headTitle($title); ?>
+    <h1 class="clearfix">
+        <?php echo $this->escapeHtml($title); ?>
+        <small class="pull-right">Total: <?php echo $total ?></small>
+    </h1>
+</div>
+<?php if ($this->isAllowed('items', 'create')) { ?>
+    <div class="row">
+        <a class="btn btn-primary" href="<?php echo $this->url('items/add'); ?>">Create New</a>
+    </div>
+<?php } ?>
+<?php if (empty($items)): ?>
+    <div class="row">
+        <div class="alert alert-info"> <?php echo $this->translate('no_records_found') ?> </div>
+    </div>
+<?php else: ?>
+<div class="row">
+    <?php echo $pagination; ?>
+    <hr/>
+    <table class="table table-striped">
+        <tr>
+            <th>#</th>
+            <th>Name</th>
+            <th>Rate (NRs.)</th>
+            <th>Created</th>
+            <th></th>
+        </tr>
+        <?php foreach ($paginator as $index => $item): ?>
+            <tr>
+                <td><?php echo $index + 1 ?></td>
+                <td><?php echo $item->getName() ?></td>
+                <td><?php echo $item->getRate() ?></td>
+                <td><?php echo $item->getCreated()->format('M d, Y h:i:s A') ?></td>
+                <td>
+                    <?php if ($this->isAllowed('items', 'update')) { ?>
+                        <a class="btn btn-sm btn-info"
+                           href="<?php echo $this->url('items/edit', ['id' => $item->getId()]); ?>">Edit</a>
+                    <?php } ?>
+                    <?php if ($this->isAllowed('items', 'delete')) { ?>
+                        <a class="btn btn-sm btn-danger"
+                           href="<?php echo $this->url('items/delete', ['id' => $item->getId()]); ?>"
+                           data-confirm-delete="true">Delete</a>
+                    <?php } ?>
+                </td>
+            </tr>
+        <?php endforeach; ?>
+    </table>
+    <?php endif; ?>
+</div>
+<?php echo $this->partial('crud/delete-confirm-modal'); ?>
